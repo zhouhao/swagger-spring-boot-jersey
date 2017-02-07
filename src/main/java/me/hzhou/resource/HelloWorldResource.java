@@ -1,6 +1,10 @@
 package me.hzhou.resource;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import me.hzhou.model.Hello;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,11 +28,19 @@ import javax.ws.rs.core.Response;
 @Path("/")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
+
+@Api(value = "Hello resource", produces = "application/json")
+
 public class HelloWorldResource {
     private static final Logger LOGGER = LoggerFactory.getLogger(HelloWorldResource.class);
 
     @GET
     @Path("v1/hello/{name}")
+    @ApiOperation(value = "Gets a hello resource. Version 1 - (version in URL)", response = Hello.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "hello resource found"),
+            @ApiResponse(code = 404, message = "Given admin user not found")
+    })
     public Response getHelloVersionInUrl(@ApiParam @PathParam("name") String name) {
         LOGGER.info("getHelloVersionInUrl() v1");
         return this.getHello(name, "Version 1 - passed in URL");

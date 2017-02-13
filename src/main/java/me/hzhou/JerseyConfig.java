@@ -53,6 +53,14 @@ public class JerseyConfig extends ResourceConfig {
         config.setResourcePackage("me.hzhou.resource");
         config.setPrettyPrint(true);
         config.setScan(true);
+
+        // it does not work as below
+        //config.getSwagger().setSecurityDefinitions(XX);
+
+        // if you want to have you pojo parse as SNAKE_CASE, please add following line,
+        // also in this case, you should use swagger.yaml, rather than swagger.json for output, as
+        // some swagger keywords, such as operationId, will be parsed as operation_id. - syntax error
+        //io.swagger.util.Json.mapper().setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE);
     }
 
 }

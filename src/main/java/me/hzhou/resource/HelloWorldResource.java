@@ -1,10 +1,6 @@
 package me.hzhou.resource;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.*;
 import me.hzhou.model.Hello;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,37 +26,31 @@ import javax.ws.rs.core.Response;
 @Produces(MediaType.APPLICATION_JSON)
 
 @Api(value = "Hello resource", produces = "application/json")
-
+@SwaggerDefinition(securityDefinition =
+@SecurityDefinition(apiKeyAuthDefintions = {
+        @ApiKeyAuthDefinition(key = "basic", name = "Authorization", in = ApiKeyAuthDefinition.ApiKeyLocation.HEADER)
+}))
 public class HelloWorldResource {
     private static final Logger LOGGER = LoggerFactory.getLogger(HelloWorldResource.class);
 
     @GET
-    @Path("v1/hello/{name}")
-    @ApiOperation(value = "Gets a hello resource. Version 1 - (version in URL)", response = Hello.class)
+    @Path("hello/{name}")
+    @ApiOperation(
+            value = "Get a hello resource."
+            , response = Hello.class
+            //,responseContainer = "List" // if returned is a list of objects
+            //,authorizations = @Authorization(value = "basic")
+    )
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "hello resource found"),
             @ApiResponse(code = 404, message = "Given admin user not found")
     })
     public Response getHelloVersionInUrl(@ApiParam @PathParam("name") String name) {
-        LOGGER.info("getHelloVersionInUrl() v1");
-        return this.getHello(name, "Version 1 - passed in URL");
-    }
-
-    @GET
-    @Path("hello/{name}")
-    @Consumes("application/vnd.asimio-v1+json")
-    @Produces("application/vnd.asimio-v1+json")
-    public Response getHelloVersionInAcceptHeader(@PathParam("name") String name) {
-        LOGGER.info("getHelloVersionInAcceptHeader() v1");
-        return this.getHello(name, "Version 1 - passed in Accept Header");
-    }
-
-    private Response getHello(String name, String partialMsg) {
         if ("404".equals(name)) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
         Hello result = new Hello();
-        result.setMsg(String.format("Hello %s. %s", name, partialMsg));
+        result.setMsg(String.format("Hello %s. %s", name, "welcome to swagger"));
         return Response.status(Response.Status.OK).entity(result).build();
     }
 }

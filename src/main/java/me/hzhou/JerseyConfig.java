@@ -3,6 +3,7 @@ package me.hzhou;
 import io.swagger.jaxrs.config.BeanConfig;
 import io.swagger.jaxrs.listing.ApiListingResource;
 import io.swagger.jaxrs.listing.SwaggerSerializers;
+import me.hzhou.filter.CORSResponseFilter;
 import me.hzhou.resource.HelloWorldResource;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.wadl.internal.WadlResource;
@@ -33,6 +34,7 @@ public class JerseyConfig extends ResourceConfig {
     }
 
     private void registerEndpoints() {
+        this.register(CORSResponseFilter.class);
         this.register(HelloWorldResource.class);
         // Available at /<Jersey's servlet path>/application.wadl
         this.register(WadlResource.class);
